@@ -65,6 +65,11 @@ Each milestone ends with something that can be demonstrated.
 The reasoning behind each significant choice is recorded in
 [Architecture Decision Records](docs/adr/).
 
+## Documentation
+
+- [Domain model](docs/domain/): glossary, modules, aggregates, state machines and events.
+- [Architecture Decision Records](docs/adr/): what I decided, and why.
+
 ## Repository layout
 
 ```
