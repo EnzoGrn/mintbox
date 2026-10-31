@@ -16,6 +16,8 @@ supersedes the old one, and I update the old one's status to point to it.
 | [0003](0003-server-side-sessions-over-jwt.md) | Server-side sessions over JWT | Accepted |
 | [0004](0004-postgresql-for-search.md) | PostgreSQL for search, no dedicated search engine | Accepted |
 | [0005](0005-money-as-integer-minor-units.md) | Money as integer minor units | Accepted |
+| [0006](0006-multi-product-line-catalog.md) | Multi-product-line catalog | Accepted |
+| [0007](0007-versioned-catalog-snapshot.md) | Versioned catalog snapshot | Accepted |
 
 ## Template
 
