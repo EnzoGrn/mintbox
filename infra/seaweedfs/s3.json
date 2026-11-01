@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "mintbox-local",
+      "credentials": [
+        {
+          "accessKey": "mintbox",
+          "secretKey": "mintbox-local-secret"
+        }
+      ],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    }
+  ]
+}
