@@ -34,6 +34,7 @@ services:
       -s3
       -s3.port=8333
       -s3.config=/etc/seaweedfs/s3.json
+      -master.telemetry=false
     ports:
       - "127.0.0.1:${STORAGE_PORT:-8333}:8333"
     volumes:
