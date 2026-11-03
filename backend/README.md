@@ -30,10 +30,17 @@ io.github.enzogrn.mintbox
 ├── MintboxApplication     Entry point
 ├── shared                 Types every module needs (Money, typed identifiers, AggregateRoot)
 └── catalog                Public API of the catalog module (events)
-    ├── domain             Aggregates, value objects, repository interfaces: plain Java
+    ├── domain             Aggregates, value objects, ports (repository, catalog source): plain Java
+    ├── application        Use cases: catalog synchronization
     └── infrastructure
-        └── persistence    JPA entities and the repository implementation
+        ├── persistence    JPA entities and the repository implementation
+        └── snapshot       Reads the catalog snapshot, imports it at startup
 ```
+
+At startup, the application synchronizes the catalog with
+`src/main/resources/catalog/amiibo.json`
+([ADR 0011](../docs/adr/0011-amiibo-snapshot-as-source-of-truth.md)). The first start imports
+about 900 entries; the next ones find nothing to change.
 
 Database migrations live in `src/main/resources/db/migration/<module>/`, and each module
 has its own PostgreSQL schema ([ADR 0010](../docs/adr/0010-one-database-schema-per-module.md)).

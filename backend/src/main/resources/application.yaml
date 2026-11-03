@@ -14,6 +14,19 @@ spring:
     hibernate:
       # Flyway owns the schema. Hibernate only checks at startup that the entities match it.
       ddl-auto: validate
+    properties:
+      hibernate:
+        # Sends inserts and updates by batches instead of one by one: the first catalog
+        # import writes about 900 entries and 3,000 release dates.
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+mintbox:
+  catalog:
+    # Synchronizes the catalog with the snapshots in src/main/resources/catalog at startup.
+    import-on-startup: true
 
 management:
   endpoints:

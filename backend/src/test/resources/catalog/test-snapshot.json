@@ -1,0 +1,28 @@
+{
+  "productLine": "AMIIBO",
+  "source": "Test data",
+  "entries": [
+    {
+      "sourceReference": "0100000000040002",
+      "name": "Link",
+      "character": "Link",
+      "series": "Super Smash Bros.",
+      "franchise": "The Legend of Zelda",
+      "figureType": "FIGURE",
+      "releaseDates": {
+        "EUROPE": "2014-11-28",
+        "NORTH_AMERICA": "2014-11-21"
+      },
+      "imageUrl": "https://example.com/images/link.png"
+    },
+    {
+      "sourceReference": "00000004043f1c02",
+      "name": "Mario - My Mario Wooden Blocks",
+      "character": "Mario",
+      "series": "My Mario",
+      "franchise": "Super Mario",
+      "figureType": "BLOCK",
+      "imageUrl": "https://example.com/images/mario-blocks.png"
+    }
+  ]
+}

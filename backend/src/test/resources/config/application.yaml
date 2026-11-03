@@ -1,0 +1,7 @@
+# Test overrides. Spring Boot reads classpath:/config/application.yaml on top of
+# classpath:/application.yaml, so only the values below change in tests.
+
+mintbox:
+  catalog:
+    # Tests create the catalog data they need, instead of importing the whole snapshot.
+    import-on-startup: false

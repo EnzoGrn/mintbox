@@ -5,5 +5,7 @@ public enum FigureType {
     FIGURE,
     CARD,
     YARN,
-    BAND
+    BAND,
+    /** Wooden blocks, such as the "My Mario Wooden Blocks" amiibo. */
+    BLOCK
 }

@@ -5,6 +5,7 @@ import io.github.enzogrn.mintbox.catalog.domain.CatalogEntryRepository;
 import io.github.enzogrn.mintbox.catalog.domain.ProductLine;
 import io.github.enzogrn.mintbox.catalog.domain.SourceReference;
 import io.github.enzogrn.mintbox.shared.CatalogEntryId;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,13 @@ class JpaCatalogEntryRepository implements CatalogEntryRepository {
         return jpaRepository
                 .findByProductLineAndSourceReference(productLine, sourceReference.value())
                 .map(CatalogEntryJpaEntity::toDomain);
+    }
+
+    @Override
+    public List<CatalogEntry> findAllByProductLine(ProductLine productLine) {
+        return jpaRepository.findAllWithReleaseDatesByProductLine(productLine).stream()
+                .map(CatalogEntryJpaEntity::toDomain)
+                .toList();
     }
 
     @Override
