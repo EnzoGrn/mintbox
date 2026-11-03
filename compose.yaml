@@ -27,7 +27,7 @@ services:
   # S3-compatible object storage for listing photos (see docs/adr/0008).
   # The API creates its buckets at startup.
   storage:
-    image: chrislusf/seaweedfs:4.45
+    image: chrislusf/seaweedfs:4.50
     command: >
       server
       -dir=/data
