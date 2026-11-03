@@ -42,7 +42,7 @@ class CatalogSynchronizerIntegrationTest {
 
         SynchronizationReport secondRun = synchronizer.synchronize(amiiboSnapshot);
 
-        assertThat(firstRun.added()).isEqualTo(firstRun.total()).isGreaterThanOrEqualTo(932);
+        assertThat(firstRun.added()).isEqualTo(firstRun.total()).isGreaterThanOrEqualTo(952);
         assertThat(secondRun.unchanged()).isEqualTo(firstRun.total());
         assertThat(secondRun.added()).isZero();
         assertThat(secondRun.updated()).isZero();

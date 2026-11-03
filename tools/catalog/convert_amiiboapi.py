@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 """Converts AmiiboAPI's database file into Mintbox's catalog snapshot format.
 
-AmiiboAPI (https://github.com/N3evin/AmiiboAPI, MIT license) stores each amiibo under its
-16-digit hexadecimal identifier, which encodes the character, the type, the series and the
-game series. This script decodes it with the lookup tables of the same file, and writes one
-explicit entry per amiibo, sorted by identifier so that diffs stay readable.
+AmiiboAPI (MIT license) stores each amiibo under its 16-digit hexadecimal identifier, which
+encodes the character, the type, the series and the game series. This script decodes it with
+the lookup tables of the same file, and writes one explicit entry per amiibo, sorted by
+identifier so that diffs stay readable.
+
+The original repository (N3evin/AmiiboAPI) was archived on 2025-12-31. The data is now
+maintained in the community fork 8bitDream/AmiiboAPI, which serves amiiboapi.org.
 
 Usage:
-    python3 tools/catalog/convert_amiiboapi.py path/to/amiibo.json \
+    curl -o amiibo-source.json https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/database/amiibo.json
+    python3 tools/catalog/convert_amiiboapi.py amiibo-source.json \
         > backend/src/main/resources/catalog/amiibo.json
 
-The AmiiboAPI repository was archived on 2025-12-31, so this conversion was a one-off: the
-snapshot is now maintained by hand. See docs/adr/0011-amiibo-snapshot-as-source-of-truth.md.
+A scheduled workflow (.github/workflows/catalog-snapshot.yml) runs this every week and opens
+a pull request when the catalog changed. See docs/adr/0013-refresh-the-amiibo-snapshot-from-the-maintained-fork.md.
 """
 
 import json
 import sys
 
-SOURCE = "AmiiboAPI database (https://github.com/N3evin/AmiiboAPI), MIT license, (c) 2017 Nevin Vu"
-IMAGE_URL = "https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_{head}-{tail}.png"
+SOURCE = ("AmiiboAPI database (https://github.com/8bitDream/AmiiboAPI, fork of "
+          "https://github.com/N3evin/AmiiboAPI), MIT license, (c) 2017 Nevin Vu")
+IMAGE_URL = "https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/images/icon_{head}-{tail}.png"
 
 FIGURE_TYPES = {
     "Figure": "FIGURE",

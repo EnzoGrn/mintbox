@@ -2,17 +2,21 @@
 
 ## `convert_amiiboapi.py`
 
-Converts the database file of [AmiiboAPI](https://github.com/N3evin/AmiiboAPI) (MIT license,
-© 2017 Nevin Vu) into the snapshot format read by the backend.
+Converts the database file of AmiiboAPI (MIT license, © 2017 Nevin Vu) into the snapshot
+format read by the backend. The data comes from
+[8bitDream/AmiiboAPI](https://github.com/8bitDream/AmiiboAPI), the maintained fork that
+serves [amiiboapi.org](https://amiiboapi.org/), since the original repository was archived.
 
 ```bash
-curl -o amiibo-source.json https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/database/amiibo.json
+curl -o amiibo-source.json https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/database/amiibo.json
 python3 tools/catalog/convert_amiiboapi.py amiibo-source.json > backend/src/main/resources/catalog/amiibo.json
 ```
 
-The AmiiboAPI repository was archived on 2025-12-31, so this conversion was run once. The
-snapshot is now maintained by hand: see
-[ADR 0011](../../docs/adr/0011-amiibo-snapshot-as-source-of-truth.md).
+You normally don't need to run it: the
+[Catalog snapshot](../../.github/workflows/catalog-snapshot.yml) workflow does it every
+week and opens a pull request when the catalog changed. It can also be started by hand from
+the Actions tab. See
+[ADR 0013](../../docs/adr/0013-refresh-the-amiibo-snapshot-from-the-maintained-fork.md).
 
 ## Snapshot format
 
@@ -41,6 +45,5 @@ snapshot is now maintained by hand: see
 - `imageUrl`: must be an HTTPS URL.
 - `attributes`: optional, only for product lines that declare line-specific attributes.
 
-Keep entries sorted by `sourceReference`. To add an amiibo, add an entry with a new
-16-digit hexadecimal `sourceReference` and run `./mvnw verify`: a test checks the whole file
-against the domain rules.
+Entries are sorted by `sourceReference`. `./mvnw verify` checks the whole file against the
+domain rules.

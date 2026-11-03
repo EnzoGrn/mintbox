@@ -101,8 +101,9 @@ to `.env` and edit it.
 
 ## Credits
 
-The amiibo catalog data comes from [AmiiboAPI](https://github.com/N3evin/AmiiboAPI)
-(MIT license, © 2017 Nevin Vu), converted with [`tools/catalog`](tools/catalog/).
+The amiibo catalog data and images come from AmiiboAPI (MIT license, © 2017 Nevin Vu), by
+way of its maintained fork [8bitDream/AmiiboAPI](https://github.com/8bitDream/AmiiboAPI),
+converted with [`tools/catalog`](tools/catalog/).
 
 ## License
 

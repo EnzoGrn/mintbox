@@ -79,7 +79,8 @@ class SnapshotCatalogSourceTest {
 
         @Test
         void contains_the_whole_amiibo_catalog() {
-            assertThat(entries).hasSizeGreaterThanOrEqualTo(932);
+            // Entries are never removed (rule CAT-2): the catalog can only grow.
+            assertThat(entries).hasSizeGreaterThanOrEqualTo(952);
         }
 
         @Test
