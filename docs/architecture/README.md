@@ -20,7 +20,7 @@ flowchart TB
 
     mintbox["<b>Mintbox</b><br/>[Software system]<br/>Collection tracker and<br/>peer-to-peer marketplace"]
 
-    images["<b>Image host</b><br/>[External system]<br/>AmiiboAPI's archived<br/>repository on GitHub"]
+    images["<b>Image host</b><br/>[External system]<br/>AmiiboAPI's maintained<br/>fork on GitHub"]
     oauth["<b>Identity providers</b><br/>[External system]<br/>Google, Apple"]
     stripe["<b>Stripe</b><br/>[External system]<br/>Payments, escrow, payouts"]
     shipping["<b>Shipping aggregator</b><br/>[External system]<br/>Rates, labels, tracking"]

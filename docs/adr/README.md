@@ -21,8 +21,9 @@ supersedes the old one, and I update the old one's status to point to it.
 | [0008](0008-s3-compatible-object-storage.md) | S3-compatible object storage | Accepted |
 | [0009](0009-framework-free-domain-model.md) | Framework-free domain model | Accepted |
 | [0010](0010-one-database-schema-per-module.md) | One database schema per module | Accepted |
-| [0011](0011-amiibo-snapshot-as-source-of-truth.md) | Amiibo snapshot as the source of truth | Accepted |
+| [0011](0011-amiibo-snapshot-as-source-of-truth.md) | Amiibo snapshot as the source of truth | Amended by 0013 |
 | [0012](0012-read-queries-bypass-the-domain-model.md) | Read queries bypass the domain model | Accepted |
+| [0013](0013-refresh-the-amiibo-snapshot-from-the-maintained-fork.md) | Refresh the amiibo snapshot from the maintained fork | Accepted |
 
 ## Template
 

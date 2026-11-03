@@ -1,6 +1,8 @@
 # 0011. Amiibo snapshot as the source of truth
 
-- **Status:** Accepted. Amends [0007](0007-versioned-catalog-snapshot.md).
+- **Status:** Accepted. Amends [0007](0007-versioned-catalog-snapshot.md). Amended by
+  [0013](0013-refresh-the-amiibo-snapshot-from-the-maintained-fork.md): the snapshot is now
+  refreshed weekly from a maintained fork, instead of by hand.
 - **Date:** 2026-11-03
 
 ## Context
