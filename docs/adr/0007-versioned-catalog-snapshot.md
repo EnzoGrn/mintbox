@@ -1,6 +1,7 @@
 # 0007. Versioned catalog snapshot
 
-- **Status:** Accepted
+- **Status:** Accepted. Amended by [0011](0011-amiibo-snapshot-as-source-of-truth.md): the
+  snapshot is now the source of truth, without synchronization with the API.
 - **Date:** 2026-10-31
 
 ## Context

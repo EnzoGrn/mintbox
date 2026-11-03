@@ -20,7 +20,7 @@ flowchart TB
 
     mintbox["<b>Mintbox</b><br/>[Software system]<br/>Collection tracker and<br/>peer-to-peer marketplace"]
 
-    catalogsource["<b>Catalog sources</b><br/>[External system]<br/>AmiiboAPI"]
+    images["<b>Image host</b><br/>[External system]<br/>AmiiboAPI's archived<br/>repository on GitHub"]
     oauth["<b>Identity providers</b><br/>[External system]<br/>Google, Apple"]
     stripe["<b>Stripe</b><br/>[External system]<br/>Payments, escrow, payouts"]
     shipping["<b>Shipping aggregator</b><br/>[External system]<br/>Rates, labels, tracking"]
@@ -30,7 +30,7 @@ flowchart TB
     member -- "Uses" --> mintbox
     moderator -- "Moderates" --> mintbox
 
-    mintbox -- "Imports the catalog from" --> catalogsource
+    visitor -- "Loads catalog images from" --> images
     mintbox -- "Signs members in with" --> oauth
     mintbox -- "Takes payments and pays sellers through" --> stripe
     mintbox -- "Buys labels and tracks parcels through" --> shipping
@@ -43,11 +43,14 @@ flowchart TB
     classDef external fill:#999,stroke:#6b6b6b,color:#fff
     class visitor,member,moderator person
     class mintbox system
-    class catalogsource,oauth,stripe,shipping,email external
+    class images,oauth,stripe,shipping,email external
 ```
 
-Catalog images are loaded by the browser straight from the catalog source: Mintbox doesn't
-host them (see [ADR 0007](../adr/0007-versioned-catalog-snapshot.md)).
+- The catalog itself ships with the application as a versioned snapshot: Mintbox calls no
+  external service to know which figures exist
+  (see [ADR 0011](../adr/0011-amiibo-snapshot-as-source-of-truth.md)).
+- Catalog images are loaded by the visitor's browser straight from their source: Mintbox
+  doesn't host them (see [ADR 0007](../adr/0007-versioned-catalog-snapshot.md)).
 
 ## Level 2: containers
 
@@ -65,7 +68,7 @@ flowchart TB
         storage[("<b>Object storage</b><br/>[S3-compatible]<br/>Listing photos")]
     end
 
-    external["<b>External systems</b><br/>Stripe, shipping, email,<br/>identity providers, catalog sources"]
+    external["<b>External systems</b><br/>Stripe, shipping, email,<br/>identity providers"]
 
     member -- "HTTPS" --> proxy
     proxy -- "/*" --> web

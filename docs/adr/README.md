@@ -17,10 +17,11 @@ supersedes the old one, and I update the old one's status to point to it.
 | [0004](0004-postgresql-for-search.md) | PostgreSQL for search, no dedicated search engine | Accepted |
 | [0005](0005-money-as-integer-minor-units.md) | Money as integer minor units | Accepted |
 | [0006](0006-multi-product-line-catalog.md) | Multi-product-line catalog | Accepted |
-| [0007](0007-versioned-catalog-snapshot.md) | Versioned catalog snapshot | Accepted |
+| [0007](0007-versioned-catalog-snapshot.md) | Versioned catalog snapshot | Amended by 0011 |
 | [0008](0008-s3-compatible-object-storage.md) | S3-compatible object storage | Accepted |
 | [0009](0009-framework-free-domain-model.md) | Framework-free domain model | Accepted |
 | [0010](0010-one-database-schema-per-module.md) | One database schema per module | Accepted |
+| [0011](0011-amiibo-snapshot-as-source-of-truth.md) | Amiibo snapshot as the source of truth | Accepted |
 
 ## Template
 
