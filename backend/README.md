@@ -6,7 +6,8 @@ Spring Boot application, structured as a **modular monolith** with Spring Moduli
 ## Requirements
 
 - JDK 25
-- Docker, for the local infrastructure and, later, the integration tests
+- Docker, running: the integration tests start their own PostgreSQL with Testcontainers,
+  and the application uses the one from `compose.yaml`
 
 Maven doesn't need to be installed: the Maven wrapper (`mvnw`) downloads the right version.
 
@@ -17,7 +18,7 @@ Run from this folder. On Windows, use `.\mvnw.cmd` instead of `./mvnw`.
 | Command | What it does |
 |---------|--------------|
 | `./mvnw verify` | Compiles, runs every test and checks the module boundaries |
-| `./mvnw spring-boot:run` | Starts the API on <http://localhost:8080> |
+| `./mvnw spring-boot:run` | Starts the API on <http://localhost:8080>. Run `docker compose up -d` at the repository root first |
 
 Once the API is running, <http://localhost:8080/actuator/health> should answer
 `{"status":"UP"}`.
@@ -29,8 +30,13 @@ io.github.enzogrn.mintbox
 ├── MintboxApplication     Entry point
 ├── shared                 Types every module needs (Money, typed identifiers, AggregateRoot)
 └── catalog                Public API of the catalog module (events)
-    └── domain             Aggregates, value objects, repository interfaces: plain Java
+    ├── domain             Aggregates, value objects, repository interfaces: plain Java
+    └── infrastructure
+        └── persistence    JPA entities and the repository implementation
 ```
+
+Database migrations live in `src/main/resources/db/migration/<module>/`, and each module
+has its own PostgreSQL schema ([ADR 0010](../docs/adr/0010-one-database-schema-per-module.md)).
 
 Each business module described in the [domain model](../docs/domain/modules.md) becomes a
 direct sub-package of `io.github.enzogrn.mintbox` as it is built. Inside a module, the

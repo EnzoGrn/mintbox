@@ -2,6 +2,19 @@ spring:
   application:
     name: mintbox
 
+  # Matches the local stack started by compose.yaml. The same variables as in .env apply.
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:mintbox}
+    username: ${POSTGRES_USER:mintbox}
+    password: ${POSTGRES_PASSWORD:mintbox}
+
+  jpa:
+    # Database access happens in application services, never while rendering a response.
+    open-in-view: false
+    hibernate:
+      # Flyway owns the schema. Hibernate only checks at startup that the entities match it.
+      ddl-auto: validate
+
 management:
   endpoints:
     web:

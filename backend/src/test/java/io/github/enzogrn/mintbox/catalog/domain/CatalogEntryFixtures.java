@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /** Ready-made catalog data for tests. */
-final class CatalogEntryFixtures {
+public final class CatalogEntryFixtures {
 
-    static final SourceReference LINK_REFERENCE = new SourceReference("01000000034c0902");
+    public static final SourceReference LINK_REFERENCE = new SourceReference("01000000034c0902");
 
     private CatalogEntryFixtures() {
     }
 
-    static CatalogEntryDetails linkDetails() {
+    public static CatalogEntryDetails linkDetails() {
         return new CatalogEntryDetails(
                 "Link",
                 "Link",
@@ -26,7 +26,7 @@ final class CatalogEntryFixtures {
                 LineAttributes.none());
     }
 
-    static CatalogEntryDetails linkDetailsNamed(String name) {
+    public static CatalogEntryDetails linkDetailsNamed(String name) {
         CatalogEntryDetails link = linkDetails();
         return new CatalogEntryDetails(
                 name,
