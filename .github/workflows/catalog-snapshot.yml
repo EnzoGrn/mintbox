@@ -1,0 +1,87 @@
+# Regenerates the amiibo catalog snapshot from AmiiboAPI's maintained fork every week, and
+# opens a pull request when it changed. See docs/adr/0013-refresh-the-amiibo-snapshot-from-the-maintained-fork.md.
+#
+# Requires "Allow GitHub Actions to create and approve pull requests" in the repository
+# settings (Settings > Actions > General > Workflow permissions).
+
+name: Catalog snapshot
+
+on:
+  schedule:
+    # Mondays at 04:17 UTC.
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: catalog-snapshot
+  cancel-in-progress: false
+
+env:
+  SOURCE_URL: https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/database/amiibo.json
+  SNAPSHOT: backend/src/main/resources/catalog/amiibo.json
+
+jobs:
+  refresh:
+    name: Refresh amiibo snapshot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Regenerate the snapshot
+        run: |
+          curl --fail --silent --show-error --location -o "$RUNNER_TEMP/amiibo-source.json" "$SOURCE_URL"
+          python3 tools/catalog/convert_amiiboapi.py "$RUNNER_TEMP/amiibo-source.json" > "$SNAPSHOT"
+
+      - name: Check whether the catalog changed
+        id: diff
+        run: |
+          if git diff --quiet -- "$SNAPSHOT"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "The catalog is up to date."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- "$SNAPSHOT"
+          fi
+
+      # Pull requests opened with the workflow token don't trigger the other workflows, so
+      # the snapshot is validated here, before the pull request exists.
+      - name: Set up JDK 25
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Validate the snapshot against the domain rules
+        if: steps.diff.outputs.changed == 'true'
+        working-directory: backend
+        # The trailing * includes the test's @Nested classes.
+        run: ./mvnw --batch-mode --no-transfer-progress test '-Dtest=SnapshotCatalogSourceTest*'
+
+      - name: Open or update the pull request
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: catalog/refresh-amiibo-snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --create "$BRANCH"
+          git commit --all --message "feat(catalog): refresh amiibo snapshot from AmiiboAPI"
+          git push --force origin "$BRANCH"
+
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "feat(catalog): refresh amiibo snapshot from AmiiboAPI" \
+              --body "Weekly refresh of \`$SNAPSHOT\` from [AmiiboAPI]($SOURCE_URL). The snapshot passed \`SnapshotCatalogSourceTest\`. Review the diff: new amiibo are additions, changed lines are corrections from the source."
+          fi
