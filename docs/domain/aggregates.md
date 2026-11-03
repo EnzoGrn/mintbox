@@ -38,7 +38,7 @@ it has its own identity and lifecycle.
 |-------|-------|
 | `productLine` | Amiibo for now. See [ADR 0006](../adr/0006-multi-product-line-catalog.md). |
 | `sourceReference` | The identifier in the catalog source, used to synchronize. Unique per product line. |
-| `name`, `character`, `series`, `franchise`, `figureType` | Attributes shared by all product lines. |
+| `name`, `character`, `series`, `franchise`, `figureType` | Attributes shared by all product lines. `figureType` is the physical form (figure, card, yarn...); what an entry does in its game, such as a Skylanders trap, is a line-specific attribute. |
 | `releaseDates` | One optional date per region. |
 | `imageUrl` | A link to the image at the source. I don't host official images. |
 | `attributes` | Attributes specific to one product line, validated against that line's definition. |
