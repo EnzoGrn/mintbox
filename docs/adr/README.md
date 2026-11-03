@@ -19,6 +19,7 @@ supersedes the old one, and I update the old one's status to point to it.
 | [0006](0006-multi-product-line-catalog.md) | Multi-product-line catalog | Accepted |
 | [0007](0007-versioned-catalog-snapshot.md) | Versioned catalog snapshot | Accepted |
 | [0008](0008-s3-compatible-object-storage.md) | S3-compatible object storage | Accepted |
+| [0009](0009-framework-free-domain-model.md) | Framework-free domain model | Accepted |
 
 ## Template
 

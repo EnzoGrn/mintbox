@@ -27,11 +27,16 @@ Once the API is running, <http://localhost:8080/actuator/health> should answer
 ```
 io.github.enzogrn.mintbox
 ├── MintboxApplication     Entry point
-└── shared                 Types every module needs (Money, typed identifiers)
+├── shared                 Types every module needs (Money, typed identifiers, AggregateRoot)
+└── catalog                Public API of the catalog module (events)
+    └── domain             Aggregates, value objects, repository interfaces: plain Java
 ```
 
 Each business module described in the [domain model](../docs/domain/modules.md) becomes a
-direct sub-package of `io.github.enzogrn.mintbox` as it is built.
+direct sub-package of `io.github.enzogrn.mintbox` as it is built. Inside a module, the
+`domain`, `application` and `infrastructure` packages have distinct roles, described in
+[ADR 0009](../docs/adr/0009-framework-free-domain-model.md). A test fails the build if a
+domain package depends on a framework.
 
 `./mvnw verify` also generates diagrams of the modules, from the actual code, in
 `target/spring-modulith-docs`.
