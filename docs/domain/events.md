@@ -21,7 +21,7 @@ transaction.
 
 | Event | Payload | Consumers |
 |-------|---------|-----------|
-| `CatalogEntryAdded` | entry, product line | — |
+| `CatalogEntryAdded` | entry | — |
 | `CatalogEntryUpdated` | entry | `listing` (refreshes its copy of the catalog fields) |
 
 ## Account
