@@ -31,10 +31,31 @@ io.github.enzogrn.mintbox
 ├── shared                 Types every module needs (Money, typed identifiers, AggregateRoot)
 └── catalog                Public API of the catalog module (events)
     ├── domain             Aggregates, value objects, ports (repository, catalog source): plain Java
-    ├── application        Use cases: catalog synchronization
+    ├── application        Use cases (synchronization) and read queries with their views
     └── infrastructure
-        ├── persistence    JPA entities and the repository implementation
-        └── snapshot       Reads the catalog snapshot, imports it at startup
+        ├── persistence    JPA for writes, SQL with JdbcClient for reads
+        ├── snapshot       Reads the catalog snapshot, imports it at startup
+        └── web            REST controller
+```
+
+Writes go through the domain model; reads use SQL queries returning views
+([ADR 0012](../docs/adr/0012-read-queries-bypass-the-domain-model.md)).
+
+## HTTP API
+
+| Endpoint | Returns |
+|----------|---------|
+| `GET /api/catalog/entries` | One page of entries sorted by name. Filters: `productLine`, `series`, `franchise`, `figureType`. Paging: `limit` (1 to 100, default 24) and `cursor` |
+| `GET /api/catalog/entries/{id}` | One entry, with its release dates |
+| `GET /api/catalog/series` | Every series with its number of entries. Filters: `productLine`, `figureType` |
+
+To get the next page, pass the `nextCursor` of a response back as `cursor`, with the same
+filters. Errors are [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details
+(`application/problem+json`).
+
+```bash
+curl "http://localhost:8080/api/catalog/entries?series=Super%20Smash%20Bros.&limit=3"
+curl "http://localhost:8080/api/catalog/series?figureType=FIGURE"
 ```
 
 At startup, the application synchronizes the catalog with

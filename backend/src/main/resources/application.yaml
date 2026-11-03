@@ -8,6 +8,11 @@ spring:
     username: ${POSTGRES_USER:mintbox}
     password: ${POSTGRES_PASSWORD:mintbox}
 
+  mvc:
+    # Errors are returned as RFC 9457 problem details (application/problem+json).
+    problemdetails:
+      enabled: true
+
   jpa:
     # Database access happens in application services, never while rendering a response.
     open-in-view: false

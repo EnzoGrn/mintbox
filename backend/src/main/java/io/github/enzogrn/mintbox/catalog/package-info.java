@@ -1,7 +1,10 @@
 /**
- * The catalog's domain model, in plain Java.
+ * The catalog: every figure that exists in the real world, grouped by product line.
  *
- * <p>Nothing in this package may depend on Spring, JPA or any other framework. This is
- * checked by {@code DomainPurityTest}. See {@code docs/adr/0009-framework-free-domain-model.md}.
+ * <p>This package is the module's public API. Other modules may use the types it contains,
+ * but not the ones in its sub-packages. See {@code docs/domain/modules.md}.
  */
-package io.github.enzogrn.mintbox.catalog.domain;
+@ApplicationModule(displayName = "Catalog")
+package io.github.enzogrn.mintbox.catalog;
+
+import org.springframework.modulith.ApplicationModule;
