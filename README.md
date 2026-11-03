@@ -25,7 +25,12 @@ It is built as a **modular monolith** in Java / Spring Boot, with a strong focus
 
 ## Status
 
-🚧 **Early development.** No feature is usable yet. See the [roadmap](#roadmap).
+🚧 **Milestone 1 in progress.** The backend imports the full amiibo catalog and serves it
+over a REST API; search and the web interface come next. See the [roadmap](#roadmap).
+
+For now, Mintbox runs locally with a single command. It is built to be deployable at any
+time; the hosting will be chosen once there is a demo to show
+([ADR 0014](docs/adr/0014-defer-the-hosting-decision-stay-deployable.md)).
 
 ## Why this project
 
@@ -50,7 +55,7 @@ Each milestone ends with something that can be demonstrated.
 | 3 | Listings | Create a listing from the catalog, photos, filtered search |
 | 4 | Offers & messaging | Make, counter and accept offers; chat per listing |
 | 5 | Checkout | Reservation, escrow payment (Stripe test mode), order lifecycle, reviews |
-| 6 | Public demo | Moderation, notifications, demo data, periodic reset, deployment |
+| 6 | Demo | Moderation, notifications, demo data and account, screenshots and recording, optional public deployment |
 
 ## Tech stack
 
@@ -72,6 +77,8 @@ The reasoning behind each significant choice is recorded in
 - [Architecture](docs/architecture/): system context and containers (C4 model).
 - [Domain model](docs/domain/): glossary, modules, aggregates, state machines and events.
 - [Architecture Decision Records](docs/adr/): what I decided, and why.
+- [Definition of done](docs/definition-of-done.md) and [contributing](CONTRIBUTING.md):
+  how changes are made, reviewed and merged.
 
 ## Repository layout
 
