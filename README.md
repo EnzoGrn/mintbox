@@ -1,5 +1,7 @@
 # Mintbox
 
+[![Backend](https://github.com/EnzoGrn/mintbox/actions/workflows/backend.yml/badge.svg)](https://github.com/EnzoGrn/mintbox/actions/workflows/backend.yml)
+
 > A marketplace and collection tracker for toys-to-life collectible figures.
 
 **Mintbox** is a portfolio project: a peer-to-peer marketplace where collectors can track
