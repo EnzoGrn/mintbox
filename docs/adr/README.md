@@ -22,6 +22,7 @@ supersedes the old one, and I update the old one's status to point to it.
 | [0009](0009-framework-free-domain-model.md) | Framework-free domain model | Accepted |
 | [0010](0010-one-database-schema-per-module.md) | One database schema per module | Accepted |
 | [0011](0011-amiibo-snapshot-as-source-of-truth.md) | Amiibo snapshot as the source of truth | Accepted |
+| [0012](0012-read-queries-bypass-the-domain-model.md) | Read queries bypass the domain model | Accepted |
 
 ## Template
 
