@@ -99,6 +99,11 @@ the same command as they are built.
 Default settings work out of the box. To change a port or a password, copy `.env.example`
 to `.env` and edit it.
 
+## Credits
+
+The amiibo catalog data comes from [AmiiboAPI](https://github.com/N3evin/AmiiboAPI)
+(MIT license, © 2017 Nevin Vu), converted with [`tools/catalog`](tools/catalog/).
+
 ## License
 
 [MIT](LICENSE)
