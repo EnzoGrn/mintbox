@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: mintbox
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
