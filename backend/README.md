@@ -46,6 +46,7 @@ Writes go through the domain model; reads use SQL queries returning views
 | Endpoint | Returns |
 |----------|---------|
 | `GET /api/catalog/entries` | One page of entries sorted by name. Filters: `productLine`, `series`, `franchise`, `figureType`. Paging: `limit` (1 to 100, default 24) and `cursor` |
+| `GET /api/catalog/search?q=...` | Entries matching every word of `q`, best match first, tolerating typos and ignoring accents. Same filters as above, and `limit`; words under 3 characters are ignored |
 | `GET /api/catalog/entries/{id}` | One entry, with its release dates |
 | `GET /api/catalog/series` | Every series with its number of entries. Filters: `productLine`, `figureType` |
 
@@ -56,7 +57,12 @@ filters. Errors are [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem d
 ```bash
 curl "http://localhost:8080/api/catalog/entries?series=Super%20Smash%20Bros.&limit=3"
 curl "http://localhost:8080/api/catalog/series?figureType=FIGURE"
+curl "http://localhost:8080/api/catalog/search?q=pikachuu"
 ```
+
+Search uses PostgreSQL's `pg_trgm` (trigram similarity) and `unaccent` extensions, as
+decided in [ADR 0004](../docs/adr/0004-postgresql-for-search.md): see the V3 migration and
+`JdbcCatalogQueries#search`.
 
 At startup, the application synchronizes the catalog with
 `src/main/resources/catalog/amiibo.json`

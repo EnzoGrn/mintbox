@@ -5,6 +5,8 @@ import io.github.enzogrn.mintbox.catalog.application.CatalogEntryView;
 import io.github.enzogrn.mintbox.catalog.application.CatalogFilter;
 import io.github.enzogrn.mintbox.catalog.application.CatalogPage;
 import io.github.enzogrn.mintbox.catalog.application.CatalogQueries;
+import io.github.enzogrn.mintbox.catalog.application.CatalogSearchResults;
+import io.github.enzogrn.mintbox.catalog.application.SearchWords;
 import io.github.enzogrn.mintbox.catalog.application.SeriesSummary;
 import io.github.enzogrn.mintbox.catalog.domain.FigureType;
 import io.github.enzogrn.mintbox.catalog.domain.ProductLine;
@@ -49,9 +51,7 @@ class JdbcCatalogQueries implements CatalogQueries {
      */
     @Override
     public CatalogPage browse(CatalogFilter filter, String cursor, int limit) {
-        if (limit < 1 || limit > MAX_PAGE_SIZE) {
-            throw new IllegalArgumentException("limit must be between 1 and " + MAX_PAGE_SIZE + ": " + limit);
-        }
+        requireValidLimit(limit);
         Where where = Where.of(filter);
         if (cursor != null) {
             BrowseCursor after = BrowseCursor.decode(cursor);
@@ -75,6 +75,44 @@ class JdbcCatalogQueries implements CatalogQueries {
         List<CatalogEntrySummary> page = rows.subList(0, limit);
         CatalogEntrySummary last = page.getLast();
         return new CatalogPage(page, new BrowseCursor(last.name(), last.id()).encode());
+    }
+
+    /**
+     * Every word must appear in the entry's {@code search_text} (name, character, series and
+     * franchise, normalized by the V3 migration), with a word similarity above pg_trgm's
+     * threshold (0.6 by default): "pikachuu" matches "pikachu", "zeld" matches "zelda". The
+     * {@code <%} operator is served by the trigram index.
+     *
+     * <p>Ranking adds, for each word, its similarity to the whole search text and to the name
+     * alone, so that "zeld" ranks Zelda above Ganondorf, who only shares the series. Ties go to
+     * the shortest name, the most specific one: "Mario" before "Baby Mario - Golf".
+     */
+    @Override
+    public CatalogSearchResults search(String query, CatalogFilter filter, int limit) {
+        requireValidLimit(limit);
+        SearchWords words = SearchWords.parse(query);
+        if (words.isEmpty()) {
+            return new CatalogSearchResults(List.of());
+        }
+
+        Where where = Where.of(filter);
+        List<String> scores = new ArrayList<>();
+        for (int i = 0; i < words.values().size(); i++) {
+            String word = "catalog.normalize_search(:word" + i + ")";
+            where.add(word + " <% search_text");
+            scores.add("word_similarity(" + word + ", search_text)");
+            scores.add("word_similarity(" + word + ", catalog.normalize_search(name))");
+            where.params.put("word" + i, words.values().get(i));
+        }
+        where.params.put("limit", limit);
+
+        return new CatalogSearchResults(jdbc
+                .sql("SELECT " + SUMMARY_COLUMNS + ", " + String.join(" + ", scores) + " AS score"
+                        + " FROM catalog.catalog_entry" + where.sql()
+                        + " ORDER BY score DESC, length(name), name, id LIMIT :limit")
+                .params(where.params)
+                .query(JdbcCatalogQueries::toSummary)
+                .list());
     }
 
     @Override
@@ -114,6 +152,12 @@ class JdbcCatalogQueries implements CatalogQueries {
                 .params(where.params)
                 .query((row, rowNumber) -> new SeriesSummary(row.getString("series"), row.getInt("entry_count")))
                 .list();
+    }
+
+    private static void requireValidLimit(int limit) {
+        if (limit < 1 || limit > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("limit must be between 1 and " + MAX_PAGE_SIZE + ": " + limit);
+        }
     }
 
     private static CatalogEntrySummary toSummary(ResultSet row, int rowNumber) throws SQLException {

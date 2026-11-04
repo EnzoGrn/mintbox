@@ -26,6 +26,18 @@ public interface CatalogQueries {
      */
     CatalogPage browse(CatalogFilter filter, String cursor, int limit);
 
+    /**
+     * Finds the entries whose name, character, series or franchise contain every word of the
+     * query, tolerating typos and ignoring case and accents. "pikachuu" finds Pikachu, and
+     * "pokemon" finds "Pokémon".
+     *
+     * @param query  the words typed by the member; see {@link SearchWords} for how it is split
+     * @param filter criteria the results must also match
+     * @param limit  the maximum number of results, between 1 and {@link #MAX_PAGE_SIZE}
+     * @return the best matches first; nothing if the query has no word long enough
+     */
+    CatalogSearchResults search(String query, CatalogFilter filter, int limit);
+
     Optional<CatalogEntryView> findById(CatalogEntryId id);
 
     /** Returns every series with its number of entries, sorted by name. */
