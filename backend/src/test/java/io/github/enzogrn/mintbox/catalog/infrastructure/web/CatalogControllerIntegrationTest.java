@@ -91,6 +91,30 @@ class CatalogControllerIntegrationTest {
     }
 
     @Test
+    void searches_entries_tolerating_typos() {
+        assertThat(mvc.get().uri("/api/catalog/search").param("q", "isabel"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.items[*].name").asArray().containsExactly("Isabelle");
+    }
+
+    @Test
+    void answers_400_for_a_search_without_a_query() {
+        assertThat(mvc.get().uri("/api/catalog/search"))
+                .hasStatus(HttpStatus.BAD_REQUEST)
+                .hasContentTypeCompatibleWith(PROBLEM_JSON);
+        assertThat(mvc.get().uri("/api/catalog/search").param("q", "   "))
+                .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void answers_400_for_a_search_query_that_is_too_long() {
+        assertThat(mvc.get().uri("/api/catalog/search").param("q", "mario ".repeat(30)))
+                .hasStatus(HttpStatus.BAD_REQUEST)
+                .hasContentTypeCompatibleWith(PROBLEM_JSON);
+    }
+
+    @Test
     void answers_404_with_a_problem_detail_for_an_unknown_entry() {
         assertThat(mvc.get().uri("/api/catalog/entries/{id}", "01a1a1ea-4c37-7f0e-83db-de823a253139"))
                 .hasStatus(HttpStatus.NOT_FOUND)

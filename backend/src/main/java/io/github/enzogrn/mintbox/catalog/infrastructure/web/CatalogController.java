@@ -4,6 +4,7 @@ import io.github.enzogrn.mintbox.catalog.application.CatalogEntryView;
 import io.github.enzogrn.mintbox.catalog.application.CatalogFilter;
 import io.github.enzogrn.mintbox.catalog.application.CatalogPage;
 import io.github.enzogrn.mintbox.catalog.application.CatalogQueries;
+import io.github.enzogrn.mintbox.catalog.application.CatalogSearchResults;
 import io.github.enzogrn.mintbox.catalog.application.InvalidCursorException;
 import io.github.enzogrn.mintbox.catalog.application.SeriesSummary;
 import io.github.enzogrn.mintbox.catalog.domain.FigureType;
@@ -11,6 +12,8 @@ import io.github.enzogrn.mintbox.catalog.domain.ProductLine;
 import io.github.enzogrn.mintbox.shared.CatalogEntryId;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -27,13 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
  * Public, read-only HTTP API of the catalog.
  *
  * <p>Errors are returned as RFC 9457 problem details: unknown entry (404), invalid filter,
- * limit or cursor (400).
+ * limit, cursor or search query (400).
  */
 @RestController
 @RequestMapping("/api/catalog")
 class CatalogController {
 
     private static final String DEFAULT_PAGE_SIZE = "24";
+    private static final int MAX_QUERY_LENGTH = 100;
 
     private final CatalogQueries queries;
 
@@ -54,6 +58,22 @@ class CatalogController {
             @RequestParam(required = false) String cursor,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(1) @Max(CatalogQueries.MAX_PAGE_SIZE) int limit) {
         return queries.browse(new CatalogFilter(productLine, series, franchise, figureType), cursor, limit);
+    }
+
+    /**
+     * Searches entries by name, character, series or franchise, tolerating typos. Every word
+     * of {@code q} must match; words shorter than 3 characters are ignored, so a query made of
+     * them only returns no results. The same filters as {@link #browse} apply.
+     */
+    @GetMapping("/search")
+    CatalogSearchResults search(
+            @RequestParam @NotBlank @Size(max = MAX_QUERY_LENGTH) String q,
+            @RequestParam(required = false) ProductLine productLine,
+            @RequestParam(required = false) String series,
+            @RequestParam(required = false) String franchise,
+            @RequestParam(required = false) FigureType figureType,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(1) @Max(CatalogQueries.MAX_PAGE_SIZE) int limit) {
+        return queries.search(q, new CatalogFilter(productLine, series, franchise, figureType), limit);
     }
 
     @GetMapping("/entries/{id}")
