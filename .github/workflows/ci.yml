@@ -1,0 +1,142 @@
+# Continuous integration for every pull request and every push to main.
+#
+# Each job only runs when its part of the repository changed, and the "CI result" job always
+# runs and sums them up. Branch protection requires "CI result" only: a documentation-only
+# pull request passes it without waiting for a build that never starts.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Lets other workflows run the CI on a branch they pushed (see catalog-snapshot.yml).
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      stack: ${{ steps.filter.outputs.stack }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: List the areas that changed
+        id: filter
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          # Outside pull requests (push to main, manual run), check everything.
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "backend=true" >> "$GITHUB_OUTPUT"
+            echo "stack=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed=$(git diff --name-only "origin/$BASE_REF...HEAD")
+          echo "Changed files:"
+          echo "$changed"
+
+          matches() { grep -qE "$1" <<< "$changed" && echo true || echo false; }
+          echo "backend=$(matches '^(backend/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
+          echo "stack=$(matches '^(compose\.yaml$|\.env\.example$|infra/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
+
+  backend:
+    name: Backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Build and test
+        run: ./mvnw --batch-mode --no-transfer-progress verify
+
+  stack:
+    name: Local stack
+    needs: changes
+    if: needs.changes.outputs.stack == 'true'
+    runs-on: ubuntu-latest
+    env:
+      AWS_CLI_IMAGE: amazon/aws-cli:2.38.1
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Validate compose.yaml
+        run: docker compose config --quiet
+
+      - name: Start the stack
+        run: docker compose up --detach --wait --wait-timeout 120
+
+      # SeaweedFS has no health check, so its S3 endpoint may need a few more seconds.
+      - name: Check that S3 accepts the local credentials
+        run: |
+          for attempt in $(seq 1 15); do
+            if docker run --rm --network mintbox_default \
+                -e AWS_ACCESS_KEY_ID=mintbox -e AWS_SECRET_ACCESS_KEY=mintbox-local-secret -e AWS_DEFAULT_REGION=us-east-1 \
+                "$AWS_CLI_IMAGE" --endpoint-url http://storage:8333 s3 mb s3://ci-smoke-test; then
+              exit 0
+            fi
+            echo "S3 not ready yet (attempt $attempt), retrying in 2 seconds"
+            sleep 2
+          done
+          exit 1
+
+      - name: Check that S3 refuses unknown credentials
+        run: |
+          if docker run --rm --network mintbox_default \
+              -e AWS_ACCESS_KEY_ID=intruder -e AWS_SECRET_ACCESS_KEY=wrong-secret -e AWS_DEFAULT_REGION=us-east-1 \
+              "$AWS_CLI_IMAGE" --endpoint-url http://storage:8333 s3 ls; then
+            echo "S3 accepted unknown credentials"
+            exit 1
+          fi
+
+      - name: Show the logs
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop the stack
+        if: always()
+        run: docker compose down --volumes
+
+  result:
+    name: CI result
+    needs: [changes, backend, stack]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if a job failed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          # A skipped job means its area didn't change: that counts as a success.
+          echo "Job results: $RESULTS"
+          case " $RESULTS " in
+            *" failure "* | *" cancelled "*) exit 1 ;;
+          esac

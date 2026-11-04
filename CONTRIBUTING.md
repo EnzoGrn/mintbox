@@ -47,6 +47,13 @@ as they are when merging.
 4. Merge with **Rebase and merge** once the CI is green, so that `main` keeps a linear
    history of meaningful commits. Then delete the branch.
 
+## Continuous integration
+
+The [CI workflow](.github/workflows/ci.yml) only runs the jobs whose area changed: the
+backend build and tests when `backend/` changes, and a start of the local stack with an S3
+smoke test when `compose.yaml` or `infra/` changes. Its **CI result** job always runs and
+fails if any other job failed: it is the only check that branch protection requires.
+
 ## Running the project
 
 See the [README](README.md#getting-started) and the [backend README](backend/README.md).

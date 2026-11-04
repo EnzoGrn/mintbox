@@ -1,6 +1,6 @@
 # Mintbox
 
-[![Backend](https://github.com/EnzoGrn/mintbox/actions/workflows/backend.yml/badge.svg)](https://github.com/EnzoGrn/mintbox/actions/workflows/backend.yml)
+[![CI](https://github.com/EnzoGrn/mintbox/actions/workflows/ci.yml/badge.svg)](https://github.com/EnzoGrn/mintbox/actions/workflows/ci.yml)
 
 > A marketplace and collection tracker for toys-to-life collectible figures.
 
