@@ -28,7 +28,13 @@ spring:
         order_inserts: true
         order_updates: true
 
+springdoc:
+  # Documents the business API only, not the actuator endpoints.
+  paths-to-match: /api/**
+
 mintbox:
+  # Replaced by the Maven project version at build time (Spring Boot's resource filtering).
+  version: "@project.version@"
   catalog:
     # Synchronizes the catalog with the snapshots in src/main/resources/catalog at startup.
     import-on-startup: true
