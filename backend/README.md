@@ -43,6 +43,13 @@ Writes go through the domain model; reads use SQL queries returning views
 
 ## HTTP API
 
+With the API running, its documentation is generated from the code:
+
+- **Swagger UI**, to read and try every endpoint in a browser:
+  <http://localhost:8080/swagger-ui.html>
+- **The OpenAPI document**, for tools and client generators:
+  <http://localhost:8080/v3/api-docs>
+
 | Endpoint | Returns |
 |----------|---------|
 | `GET /api/catalog/entries` | One page of entries sorted by name. Filters: `productLine`, `series`, `franchise`, `figureType`. Paging: `limit` (1 to 100, default 24) and `cursor` |
