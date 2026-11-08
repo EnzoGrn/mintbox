@@ -5,3 +5,11 @@ mintbox:
   catalog:
     # Tests create the catalog data they need, instead of importing the whole snapshot.
     import-on-startup: false
+
+logging:
+  level:
+    # Some tests check on purpose that PostgreSQL rejects invalid data, such as a duplicate
+    # source reference. Hibernate logs each rejection as a warning before the test catches
+    # the exception, which buries real warnings. Errors are still logged, and an unexpected
+    # rejection still fails its test through the exception.
+    org.hibernate.orm.jdbc.error: error
