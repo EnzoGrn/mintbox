@@ -21,6 +21,8 @@
         <java.version>25</java.version>
         <!-- Spring Boot doesn't manage Spring Modulith: its version is set here. -->
         <spring-modulith.version>2.1.2</spring-modulith.version>
+        <!-- springdoc 3.x targets Spring Boot 4; 3.2.0 is built on Spring Boot 4.1.2. -->
+        <springdoc.version>3.2.0</springdoc.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +53,13 @@
         <dependency>
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-starter-core</artifactId>
+        </dependency>
+
+        <!-- API documentation: OpenAPI description and Swagger UI, generated from the controllers -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- Persistence -->
@@ -116,12 +125,14 @@
               Loads Mockito as a Java agent when the tests start: recent JDKs warn about,
               and will soon refuse, agents that attach themselves at runtime.
               -Xshare:off silences a harmless class data sharing warning caused by the agent.
+              enable-native-access allows JNA, used by Testcontainers to talk to Docker, to load
+              native code: recent JDKs warn about it, and will block it in a future release.
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Xshare:off</argLine>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Xshare:off --enable-native-access=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
         </plugins>
