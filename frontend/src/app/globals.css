@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/*
+ * Mintbox design tokens: the single source of truth for colors, fonts and radii.
+ *
+ * Principles:
+ * - Surfaces stay neutral (warm off-white, deep navy) so that the figures bring the color.
+ * - Mint is the brand color, from the name: primary actions and highlights only.
+ * - Sun yellow is for sticker-like badges ("New", "Coming soon").
+ * - Text colors on light and dark surfaces meet WCAG AA contrast (4.5:1).
+ *
+ * Components use the Tailwind utilities generated from @theme below (bg-canvas, text-ink,
+ * border-line...), never raw hex values, so that the dark theme applies everywhere.
+ */
+
+/* Dark mode follows the data-theme attribute set by next-themes, not the media query. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --canvas: #f7f4ee;          /* page background */
+  --surface: #fffdf8;         /* cards, panels, inputs */
+  --surface-sunken: #f1eee7;  /* blister bubble behind a figure */
+  --line: #e4ded2;            /* borders and dividers */
+  --ink: #17324d;             /* primary text */
+  --ink-muted: #56677a;       /* secondary text */
+  --mint: #3dd9a0;            /* brand fill: buttons, focus, progress */
+  --mint-ink: #0f6b4c;        /* brand-colored text and icons */
+  --mint-soft: #e3f8ef;       /* tinted backgrounds: chips, highlights */
+  --on-mint: #0b2a1f;         /* text on a mint fill */
+  --sun: #ffcf3f;             /* badges */
+  --on-sun: #3d2f00;          /* text on a sun fill */
+}
+
+[data-theme="dark"] {
+  --canvas: #0f2236;
+  --surface: #16304a;
+  /* A step lighter than the card, so dark figures don't sink into the bubble. */
+  --surface-sunken: #1f3d5b;
+  --line: #2a4a68;
+  --ink: #f2f5f8;
+  --ink-muted: #a3b4c4;
+  --mint: #3dd9a0;
+  --mint-ink: #5ee6b5;
+  --mint-soft: #123f38;
+  --on-mint: #0b2a1f;
+  --sun: #ffcf3f;
+  --on-sun: #3d2f00;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-mint: var(--mint);
+  --color-mint-ink: var(--mint-ink);
+  --color-mint-soft: var(--mint-soft);
+  --color-on-mint: var(--on-mint);
+  --color-sun: var(--sun);
+  --color-on-sun: var(--on-sun);
+
+  /* Set by next/font in the root layout. */
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-fredoka);
+
+  --radius-card: 1rem;
+  --radius-bubble: 4.5rem 4.5rem 1rem 1rem;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+}
