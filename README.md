@@ -64,7 +64,7 @@ Each milestone ends with something that can be demonstrated.
 | Backend | Java 25, Spring Boot, Spring Modulith, Spring Security, Spring Data JPA |
 | Database | PostgreSQL (full-text search, `pg_trgm`, PostGIS), Flyway |
 | Storage | S3-compatible object storage (SeaweedFS locally) |
-| Frontend | Next.js, TypeScript, Tailwind CSS |
+| Frontend | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4 |
 | Payments | Stripe Connect (test mode) |
 | Testing | JUnit 5, AssertJ, Testcontainers, ArchUnit, Playwright |
 | Infrastructure | Docker Compose, GitHub Actions |
@@ -101,7 +101,8 @@ docker compose up
 
 For now, this starts the infrastructure: PostgreSQL, S3-compatible storage and a local
 mail catcher (web UI at <http://localhost:8025>). The backend and the frontend will join
-the same command as they are built.
+the same command; until then, start them as described in their READMEs:
+[backend](backend/README.md) (Java 25) and [frontend](frontend/README.md) (Node.js 24).
 
 Default settings work out of the box. To change a port or a password, copy `.env.example`
 to `.env` and edit it.
