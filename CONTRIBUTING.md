@@ -50,8 +50,9 @@ as they are when merging.
 ## Continuous integration
 
 The [CI workflow](.github/workflows/ci.yml) only runs the jobs whose area changed: the
-backend build and tests when `backend/` changes, and a start of the local stack with an S3
-smoke test when `compose.yaml` or `infra/` changes. Its **CI result** job always runs and
+backend build and tests when `backend/` changes, the frontend lint, type check and build
+when `frontend/` changes, and a start of the local stack with an S3 smoke test when
+`compose.yaml` or `infra/` changes. Its **CI result** job always runs and
 fails if any other job failed: it is the only check that branch protection requires.
 
 ## Running the project
