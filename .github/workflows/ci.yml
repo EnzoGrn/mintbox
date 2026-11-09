@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
       stack: ${{ steps.filter.outputs.stack }}
     steps:
       - name: Check out the repository
@@ -42,6 +43,7 @@ jobs:
           # Outside pull requests (push to main, manual run), check everything.
           if [ "$EVENT" != "pull_request" ]; then
             echo "backend=true" >> "$GITHUB_OUTPUT"
+            echo "frontend=true" >> "$GITHUB_OUTPUT"
             echo "stack=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -52,6 +54,7 @@ jobs:
 
           matches() { grep -qE "$1" <<< "$changed" && echo true || echo false; }
           echo "backend=$(matches '^(backend/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
+          echo "frontend=$(matches '^(frontend/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
           echo "stack=$(matches '^(compose\.yaml$|\.env\.example$|infra/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
 
   backend:
@@ -76,6 +79,39 @@ jobs:
 
       - name: Build and test
         run: ./mvnw --batch-mode --no-transfer-progress verify
+
+  frontend:
+    name: Frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check types
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
 
   stack:
     name: Local stack
@@ -127,7 +163,7 @@ jobs:
 
   result:
     name: CI result
-    needs: [changes, backend, stack]
+    needs: [changes, backend, frontend, stack]
     if: always()
     runs-on: ubuntu-latest
     steps:
