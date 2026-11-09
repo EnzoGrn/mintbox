@@ -50,6 +50,13 @@ With the API running, its documentation is generated from the code:
 - **The OpenAPI document**, for tools and client generators:
   <http://localhost:8080/v3/api-docs>
 
+A copy of the OpenAPI document is committed in [`docs/api/openapi.json`](../docs/api/), and
+a test fails when the API no longer matches it. After changing an endpoint, regenerate it:
+
+```bash
+./mvnw test -Dtest=OpenApiContractTest -Dmintbox.openapi.update=true
+```
+
 | Endpoint | Returns |
 |----------|---------|
 | `GET /api/catalog/entries` | One page of entries sorted by name. Filters: `productLine`, `series`, `franchise`, `figureType`. Paging: `limit` (1 to 100, default 24) and `cursor` |

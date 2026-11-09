@@ -31,6 +31,15 @@ spring:
 springdoc:
   # Documents the business API only, not the actuator endpoints.
   paths-to-match: /api/**
+  # Sorted keys make the document stable, so that docs/api/openapi.json only changes when
+  # the API does (see OpenApiContractTest).
+  writer-with-order-by-keys: true
+  # The API is public and open source: its documentation is served on purpose, in every
+  # environment. Saying so explicitly also silences springdoc's startup warnings.
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 
 mintbox:
   # Replaced by the Maven project version at build time (Spring Boot's resource filtering).

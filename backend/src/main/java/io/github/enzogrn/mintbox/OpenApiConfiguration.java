@@ -4,6 +4,8 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +35,9 @@ class OpenApiConfiguration {
                         .license(new License().name("MIT").url(REPOSITORY + "/blob/main/LICENSE")))
                 .externalDocs(new ExternalDocumentation()
                         .description("Source code, architecture and decision records")
-                        .url(REPOSITORY));
+                        .url(REPOSITORY))
+                // A relative server: the API is called on the same origin as the page that
+                // uses it, and the document doesn't depend on the host it was generated on.
+                .servers(List.of(new Server().url("/").description("Same origin as the web application")));
     }
 }
