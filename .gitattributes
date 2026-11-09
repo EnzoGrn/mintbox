@@ -5,6 +5,9 @@
 *.cmd text eol=crlf
 *.bat text eol=crlf
 
+# Generated files: collapsed in pull request diffs.
+frontend/src/lib/api/schema.d.ts linguist-generated=true
+
 # Binary files: never diff or normalize.
 *.png binary
 *.jpg binary

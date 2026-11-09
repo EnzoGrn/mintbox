@@ -54,7 +54,7 @@ jobs:
 
           matches() { grep -qE "$1" <<< "$changed" && echo true || echo false; }
           echo "backend=$(matches '^(backend/|docs/api/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
-          echo "frontend=$(matches '^(frontend/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
+          echo "frontend=$(matches '^(frontend/|docs/api/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
           echo "stack=$(matches '^(compose\.yaml$|\.env\.example$|infra/|\.github/workflows/ci\.yml$)')" >> "$GITHUB_OUTPUT"
 
   backend:
@@ -103,6 +103,16 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # The types are generated from docs/api/openapi.json and committed: a contract change
+      # without its regenerated types fails here.
+      - name: Check that the API types match the contract
+        run: |
+          npm run api:types
+          git diff --exit-code -- src/lib/api/schema.d.ts || {
+            echo "::error::src/lib/api/schema.d.ts is out of date. Run 'npm run api:types' and commit it."
+            exit 1
+          }
 
       - name: Lint
         run: npm run lint

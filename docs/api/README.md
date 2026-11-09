@@ -13,6 +13,13 @@ frontend:
 
 - **The frontend is typed from it.** The frontend generates its TypeScript types from this
   file, so a field renamed in the backend breaks the frontend build instead of the page.
+  After changing this file, regenerate them from `frontend/`, and commit them with it:
+
+  ```bash
+  npm run api:types
+  ```
+
+  The CI checks that the committed types match this file.
 
 Because the file is committed, every change of contract shows up in the pull request that
 makes it.
