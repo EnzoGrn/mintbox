@@ -34,6 +34,14 @@ springdoc:
   # Sorted keys make the document stable, so that docs/api/openapi.json only changes when
   # the API does (see OpenApiContractTest).
   writer-with-order-by-keys: true
+  # Every endpoint answers in JSON. Without this, springdoc documents successful responses
+  # as */*, since the controllers don't restrict what they produce.
+  default-produces-media-type: application/json
+  # Properties annotated with JSpecify's @Nullable are documented as nullable (see
+  # OpenApiConfiguration).
+  model-converters:
+    java-nullable-property-customizer:
+      enabled: true
   # The API is public and open source: its documentation is served on purpose, in every
   # environment. Saying so explicitly also silences springdoc's startup warnings.
   api-docs:

@@ -68,6 +68,11 @@ To get the next page, pass the `nextCursor` of a response back as `cursor`, with
 filters. Errors are [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details
 (`application/problem+json`).
 
+Every field of a response is always present. A field that can have no value, like
+`nextCursor` on the last page, is `null`: it is annotated with JSpecify's `@Nullable` in the
+code, and documented as nullable in the OpenAPI document. Every other field is documented as
+required, so the frontend's generated types don't make it check for missing fields.
+
 ```bash
 curl "http://localhost:8080/api/catalog/entries?series=Super%20Smash%20Bros.&limit=3"
 curl "http://localhost:8080/api/catalog/series?figureType=FIGURE"

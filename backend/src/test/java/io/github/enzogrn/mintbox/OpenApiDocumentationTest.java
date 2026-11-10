@@ -55,6 +55,37 @@ class OpenApiDocumentationTest {
     }
 
     @Test
+    void marks_the_fields_of_responses_as_required() {
+        assertThat(mvc.get().uri("/v3/api-docs"))
+                .bodyJson()
+                .extractingPath("$.components.schemas.SeriesSummary.required")
+                .asArray()
+                .containsExactly("entryCount", "name");
+    }
+
+    @Test
+    void documents_nullable_fields_as_required_and_nullable() {
+        assertThat(mvc.get().uri("/v3/api-docs"))
+                .bodyJson()
+                .extractingPath("$.components.schemas.CatalogPage.required")
+                .asArray()
+                .containsExactly("items", "nextCursor");
+        assertThat(mvc.get().uri("/v3/api-docs"))
+                .bodyJson()
+                .extractingPath("$.components.schemas.CatalogPage.properties.nextCursor.type")
+                .asArray()
+                .contains("null");
+    }
+
+    @Test
+    void documents_successful_responses_as_json() {
+        assertThat(mvc.get().uri("/v3/api-docs"))
+                .bodyJson()
+                .extractingPath("$.paths['/api/catalog/series'].get.responses['200'].content").asMap()
+                .containsOnlyKeys("application/json");
+    }
+
+    @Test
     void leaves_the_actuator_out_of_the_document() {
         assertThat(mvc.get().uri("/v3/api-docs"))
                 .bodyJson()
