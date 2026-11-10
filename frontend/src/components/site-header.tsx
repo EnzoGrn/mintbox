@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NavLink } from "@/components/nav-link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Wordmark } from "@/components/wordmark";
 
@@ -14,6 +15,7 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Main" className="flex items-center gap-6">
+          <NavLink href="/catalog">Catalog</NavLink>
           <ul className="hidden items-center gap-6 sm:flex">
             {UPCOMING_SECTIONS.map((section) => (
               <li key={section} className="flex items-center gap-2 text-sm font-semibold text-ink-muted">
