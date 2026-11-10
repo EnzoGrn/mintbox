@@ -26,7 +26,8 @@ It is built as a **modular monolith** in Java / Spring Boot, with a strong focus
 ## Status
 
 🚧 **Milestone 1 in progress.** The backend imports the full amiibo catalog and serves it
-over a REST API; search and the web interface come next. See the [roadmap](#roadmap).
+over a REST API, and the web app lets you browse it by series and type. Search comes next.
+See the [roadmap](#roadmap).
 
 For now, Mintbox runs locally with a single command. It is built to be deployable at any
 time; the hosting will be chosen once there is a demo to show
