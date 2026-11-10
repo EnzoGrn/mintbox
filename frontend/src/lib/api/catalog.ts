@@ -28,7 +28,7 @@ export async function getCatalogStats(): Promise<CatalogStats> {
   }
 
   return {
-    figureCount: data.reduce((total, series) => total + (series.entryCount ?? 0), 0),
+    figureCount: data.reduce((total, series) => total + series.entryCount, 0),
     seriesCount: data.length,
   };
 }

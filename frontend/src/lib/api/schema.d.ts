@@ -89,58 +89,58 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         CatalogEntrySummary: {
-            character?: string;
+            character: string;
             /** @enum {string} */
-            figureType?: "FIGURE" | "CARD" | "YARN" | "BAND" | "BLOCK";
-            franchise?: string;
+            figureType: "FIGURE" | "CARD" | "YARN" | "BAND" | "BLOCK";
+            franchise: string;
             /** Format: uuid */
-            id?: string;
+            id: string;
             /** Format: uri */
-            imageUrl?: string;
-            name?: string;
-            series?: string;
+            imageUrl: string;
+            name: string;
+            series: string;
         };
         CatalogEntryView: {
-            character?: string;
+            character: string;
             /** @enum {string} */
-            figureType?: "FIGURE" | "CARD" | "YARN" | "BAND" | "BLOCK";
-            franchise?: string;
+            figureType: "FIGURE" | "CARD" | "YARN" | "BAND" | "BLOCK";
+            franchise: string;
             /** Format: uuid */
-            id?: string;
+            id: string;
             /** Format: uri */
-            imageUrl?: string;
-            name?: string;
+            imageUrl: string;
+            name: string;
             /** @enum {string} */
-            productLine?: "AMIIBO";
-            releaseDates?: {
+            productLine: "AMIIBO";
+            releaseDates: {
                 [key: string]: string;
             };
-            series?: string;
+            series: string;
         };
         CatalogPage: {
-            items?: components["schemas"]["CatalogEntrySummary"][];
-            nextCursor?: string;
+            items: components["schemas"]["CatalogEntrySummary"][];
+            nextCursor: string | null;
         };
         CatalogSearchResults: {
-            items?: components["schemas"]["CatalogEntrySummary"][];
+            items: components["schemas"]["CatalogEntrySummary"][];
         };
         ProblemDetail: {
-            detail?: string;
+            detail?: string | null;
             /** Format: uri */
-            instance?: string;
+            instance?: string | null;
             properties?: {
                 [key: string]: unknown;
-            };
+            } | null;
             /** Format: int32 */
             status?: number;
-            title?: string;
+            title?: string | null;
             /** Format: uri */
-            type?: string;
+            type?: string | null;
         };
         SeriesSummary: {
             /** Format: int32 */
-            entryCount?: number;
-            name?: string;
+            entryCount: number;
+            name: string;
         };
     };
     responses: never;
@@ -185,7 +185,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CatalogPage"];
+                    "application/json": components["schemas"]["CatalogPage"];
                 };
             };
             /** @description Invalid parameter */
@@ -217,7 +217,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CatalogEntryView"];
+                    "application/json": components["schemas"]["CatalogEntryView"];
                 };
             };
             /** @description Invalid parameter */
@@ -271,7 +271,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CatalogSearchResults"];
+                    "application/json": components["schemas"]["CatalogSearchResults"];
                 };
             };
             /** @description Invalid parameter */
@@ -305,7 +305,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["SeriesSummary"][];
+                    "application/json": components["schemas"]["SeriesSummary"][];
                 };
             };
             /** @description Invalid parameter */
