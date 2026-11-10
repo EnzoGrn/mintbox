@@ -15,7 +15,7 @@ Next.js web application (App Router, React, TypeScript, Tailwind CSS).
 | `npm install` | Installs the dependencies |
 | `npm run dev` | Starts the app on <http://localhost:3000>, reloading on every change |
 | `npm run lint` | Checks the code with ESLint |
-| `npm run typecheck` | Checks the types with the TypeScript compiler |
+| `npm run typecheck` | Generates the route types, then checks the types with the TypeScript compiler |
 | `npm run build` | Builds the production version |
 | `npm run api:types` | Regenerates the API types from the [contract](../docs/api/) |
 
@@ -46,6 +46,24 @@ Server components that call the API render inside a `<Suspense>` boundary and ca
 data streams in when the page is requested. The home page's catalog count
 (`src/components/catalog-stats.tsx`) is the example to follow, including what to show when the
 backend is down.
+
+The functions in `src/lib/api/catalog.ts` cache the catalog's data for an hour
+(`"use cache"`): it only changes when its snapshot is refreshed.
+
+## Pages
+
+| Path | What it shows |
+|------|---------------|
+| `/` | The home page, with the size of the catalog |
+| `/catalog` | Every catalog entry, sorted by name, 24 at a time with a "Load more" button |
+
+The catalog's filters live in its URL, so a filtered view can be shared and bookmarked:
+`/catalog?type=card&series=Animal%20Crossing`. `src/lib/catalog/search.ts` reads and writes
+these URLs.
+
+Catalog pictures are loaded from the AmiiboAPI repository on GitHub, then resized and served
+by Next.js (`images` in `next.config.ts`). A picture that can't be loaded is replaced by a
+silhouette.
 
 ## Design
 

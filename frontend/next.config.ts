@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  images: {
+    // Catalog pictures come from the AmiiboAPI repository, the source of the catalog
+    // snapshot (ADR 0011). Next.js resizes them and serves them from its own origin.
+    remotePatterns: [new URL("https://raw.githubusercontent.com/8bitDream/AmiiboAPI/**")],
+  },
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${apiUrl}/api/:path*` }];
   },
