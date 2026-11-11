@@ -56,6 +56,7 @@ The functions in `src/lib/api/catalog.ts` cache the catalog's data for an hour
 |------|---------------|
 | `/` | The home page, with the size of the catalog |
 | `/catalog` | Every catalog entry, sorted by name, 24 at a time with a "Load more" button |
+| `/catalog/{id}` | One figure: its details, release dates, and the sections later milestones will fill |
 
 The catalog's filters live in its URL, so a filtered view can be shared and bookmarked:
 `/catalog?type=card&series=Animal%20Crossing`. `src/lib/catalog/search.ts` reads and writes
@@ -64,6 +65,11 @@ these URLs.
 Catalog pictures are loaded from the AmiiboAPI repository on GitHub, then resized and served
 by Next.js (`images` in `next.config.ts`). A picture that can't be loaded is replaced by a
 silhouette.
+
+Figure pages aren't generated at build time, since that would need a running backend during
+the build: each one is rendered on its first request, then cached. An unknown figure shows the
+app's "not found" page. Because the page has already started streaming by then, its HTTP status
+is 200 rather than 404; Next.js adds a `noindex` tag so that search engines skip it.
 
 ## Design
 
