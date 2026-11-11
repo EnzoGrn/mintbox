@@ -1,7 +1,7 @@
 import { cacheLife } from "next/cache";
 import { CATALOG_PAGE_SIZE, type CatalogSearch } from "@/lib/catalog/search";
 import { api } from "./client";
-import type { CatalogPage, FigureType, SeriesSummary } from "./types";
+import type { CatalogEntryView, CatalogPage, FigureType, SeriesSummary } from "./types";
 
 /** A server that doesn't answer within this delay is treated as down. */
 export const API_TIMEOUT_MS = 3_000;
@@ -72,4 +72,26 @@ export async function getCatalogPage(
     return { invalidCursor: true };
   }
   throw new Error(`Couldn't load the catalog: ${response.status} ${JSON.stringify(error)}`);
+}
+
+/**
+ * One catalog entry, with its release dates, or `null` if there is none with this identifier.
+ * A malformed identifier (the backend answers 400) is treated the same way: from the
+ * visitor's point of view, both are a page that doesn't exist.
+ */
+export async function getCatalogEntry(id: string): Promise<CatalogEntryView | null> {
+  "use cache";
+  cacheLife("hours");
+
+  const { data, error, response } = await api.GET("/api/catalog/entries/{id}", {
+    params: { path: { id } },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
+  });
+  if (data) {
+    return data;
+  }
+  if (response.status === 404 || response.status === 400) {
+    return null;
+  }
+  throw new Error(`Couldn't load the catalog entry ${id}: ${response.status} ${JSON.stringify(error)}`);
 }

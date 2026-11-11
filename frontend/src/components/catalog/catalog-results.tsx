@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { getCatalogPage, getSeries } from "@/lib/api/catalog";
 import { apiUrl } from "@/lib/api/api-url";
+import { Notice } from "@/components/notice";
 import { catalogHref, FIGURE_TYPES, type CatalogSearch } from "@/lib/catalog/search";
 import { CatalogShelf } from "./catalog-shelf";
 import { FigureCardSkeleton } from "./figure-card";
@@ -105,21 +105,6 @@ function Count({ count, label }: TypeCount) {
     <>
       <strong className="font-bold text-ink">{numberFormat.format(count)}</strong> {noun}
     </>
-  );
-}
-
-function Notice({ title, action, children }: { title: string; action: { href: string; label: string }; children: ReactNode }) {
-  return (
-    <div className="rounded-card border border-dashed border-line bg-surface px-6 py-14 text-center">
-      <p className="font-display text-2xl font-semibold">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-ink-muted">{children}</p>
-      <Link
-        href={action.href}
-        className="mt-6 inline-flex h-11 items-center rounded-full border border-line bg-canvas px-5 text-sm font-bold transition-colors hover:border-mint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint"
-      >
-        {action.label}
-      </Link>
-    </div>
   );
 }
 

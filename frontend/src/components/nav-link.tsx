@@ -2,13 +2,32 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
-/** A link of the main navigation, marked as current on its section's pages. */
-export function NavLink({ href, children }: { href: string; children: ReactNode }) {
+type NavLinkProps = { href: string; children: ReactNode };
+
+/**
+ * A link of the main navigation, marked as current on its section's pages.
+ *
+ * On pages whose URL is only known at request time (a figure's page), the current path can't
+ * be read while prerendering: the link is prerendered unmarked, and marked once the path is
+ * known.
+ */
+export function NavLink(props: NavLinkProps) {
+  return (
+    <Suspense fallback={<StyledLink {...props} current={false} />}>
+      <CurrentAwareLink {...props} />
+    </Suspense>
+  );
+}
+
+function CurrentAwareLink(props: NavLinkProps) {
   const pathname = usePathname();
-  const current = pathname === href || pathname.startsWith(`${href}/`);
+  const current = pathname === props.href || pathname.startsWith(`${props.href}/`);
+  return <StyledLink {...props} current={current} />;
+}
 
+function StyledLink({ href, children, current }: NavLinkProps & { current: boolean }) {
   return (
     <Link
       href={href}

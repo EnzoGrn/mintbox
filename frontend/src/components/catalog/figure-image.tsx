@@ -7,7 +7,20 @@ import { useState } from "react";
  * A figure's picture, or a neutral silhouette when the picture can't be loaded: a missing
  * image shouldn't leave a broken icon in the middle of a shelf.
  */
-export function FigureImage({ src, alt, priority = false }: { src: string; alt: string; priority?: boolean }) {
+export function FigureImage({
+  src,
+  alt,
+  priority = false,
+  // Card width in the catalog grid: two columns on phones, three on tablets, four from 1024px
+  // in a 1280px-wide page.
+  sizes = "(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw",
+}: {
+  src: string;
+  alt: string;
+  priority?: boolean;
+  /** How wide the image is displayed, for the browser to pick the right resolution. */
+  sizes?: string;
+}) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
@@ -25,8 +38,7 @@ export function FigureImage({ src, alt, priority = false }: { src: string; alt: 
       src={src}
       alt={alt}
       fill
-      // Two columns on phones, three on tablets, four from 1024px in a 1280px-wide page.
-      sizes="(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw"
+      sizes={sizes}
       priority={priority}
       onError={() => setFailed(true)}
       className="object-contain p-[12%] drop-shadow-[0_6px_8px_rgb(0_0_0/0.18)]"
