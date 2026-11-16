@@ -11730,6 +11730,21 @@
       "imageUrl": "https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/images/icon_1f000000-04c41e03.png"
     },
     {
+      "sourceReference": "1f00010004c51e03",
+      "name": "Sword Kirby (& Dragoon)",
+      "character": "Kirby",
+      "series": "Kirby Air Riders",
+      "franchise": "Kirby",
+      "figureType": "FIGURE",
+      "releaseDates": {
+        "AUSTRALIA": "2026-11-12",
+        "EUROPE": "2026-11-12",
+        "JAPAN": "2026-11-12",
+        "NORTH_AMERICA": "2026-11-12"
+      },
+      "imageUrl": "https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/images/icon_1f000100-04c51e03.png"
+    },
+    {
       "sourceReference": "1f01000000270002",
       "name": "Meta Knight",
       "character": "Meta Knight",
@@ -11818,6 +11833,21 @@
         "NORTH_AMERICA": "2026-07-02"
       },
       "imageUrl": "https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/images/icon_1f020000-04c71e03.png"
+    },
+    {
+      "sourceReference": "1f02010004c81e03",
+      "name": "Noir Dedede (& Hydra)",
+      "character": "King Dedede",
+      "series": "Kirby Air Riders",
+      "franchise": "Kirby",
+      "figureType": "FIGURE",
+      "releaseDates": {
+        "AUSTRALIA": "2026-11-12",
+        "EUROPE": "2026-11-12",
+        "JAPAN": "2026-11-12",
+        "NORTH_AMERICA": "2026-11-12"
+      },
+      "imageUrl": "https://raw.githubusercontent.com/8bitDream/AmiiboAPI/master/images/icon_1f020100-04c81e03.png"
     },
     {
       "sourceReference": "1f03000002570c02",
