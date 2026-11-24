@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.2</version>
+        <version>4.2.0</version>
         <relativePath/>
     </parent>
 
@@ -20,9 +20,9 @@
     <properties>
         <java.version>25</java.version>
         <!-- Spring Boot doesn't manage Spring Modulith: its version is set here. -->
-        <spring-modulith.version>2.1.2</spring-modulith.version>
+        <spring-modulith.version>2.2.0</spring-modulith.version>
         <!-- springdoc 3.x targets Spring Boot 4; 3.2.0 is built on Spring Boot 4.1.2. -->
-        <springdoc.version>3.2.0</springdoc.version>
+        <springdoc.version>3.2.1</springdoc.version>
     </properties>
 
     <dependencyManagement>
